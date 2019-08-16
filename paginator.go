@@ -83,6 +83,9 @@ func (p *Paginator) Paginate(stmt *gorm.DB, out interface{}) *gorm.DB {
 	if reflect.ValueOf(out).Elem().Type().Kind() == reflect.Slice && reflect.ValueOf(out).Elem().Len() > 0 {
 		p.postProcess(out)
 	}
+	if p.next.After == nil {
+		p.next.After = p.cursor.After
+	}
 	return result
 }
 
