@@ -187,5 +187,5 @@ func (p *Paginator) hasAfterCursor() bool {
 }
 
 func (p *Paginator) hasBeforeCursor() bool {
-	return !p.hasAfterCursor() && p.cursor.Before != nil
+	return p.cursor.Before != nil
 }
