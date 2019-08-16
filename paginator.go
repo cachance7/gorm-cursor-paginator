@@ -82,6 +82,8 @@ func (p *Paginator) Paginate(stmt *gorm.DB, out interface{}) *gorm.DB {
 	// out must be a pointer or gorm will panic above
 	if reflect.ValueOf(out).Elem().Type().Kind() == reflect.Slice && reflect.ValueOf(out).Elem().Len() > 0 {
 		p.postProcess(out)
+	} else if p.hasAfterCursor() {
+		p.next.After = p.cursor.After
 	}
 	return result
 }
