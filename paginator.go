@@ -83,9 +83,6 @@ func (p *Paginator) Paginate(stmt *gorm.DB, out interface{}) *gorm.DB {
 	if reflect.ValueOf(out).Elem().Type().Kind() == reflect.Slice && reflect.ValueOf(out).Elem().Len() > 0 {
 		p.postProcess(out)
 	}
-	if p.next.After == nil {
-		p.next.After = p.cursor.After
-	}
 	return result
 }
 
@@ -174,7 +171,9 @@ func (p *Paginator) postProcess(out interface{}) {
 	if p.hasBeforeCursor() {
 		elems.Set(reverse(elems))
 	}
-	if p.hasBeforeCursor() || hasMore {
+	if elems.Len() == 0 && p.hasAfterCursor() {
+		p.next.After = p.cursor.After
+	} else {
 		cursor := Encode(elems.Index(elems.Len()-1), p.keys)
 		p.next.After = &cursor
 	}
